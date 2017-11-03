@@ -16,7 +16,9 @@ CEnemy3D::CEnemy3D(Mesh* _modelMesh)
 	, m_pTerrain(NULL)
 	, m_fElapsedTimeBeforeUpdate(0.0f)
 {
+	EntityBase::setType(EntityBase::ENEMY);
 	this->modelMesh = _modelMesh;
+	setBoxSizeAABB(Vector3(3.f, 3.f, 3.f));
 }
 
 
@@ -230,6 +232,7 @@ CEnemy3D* Create::Enemy3D(const std::string& _meshName,
 	result->SetPosition(_position);
 	result->SetScale(_scale);
 	result->SetCollider(false);
+	result->setType(EntityBase::ENEMY);
 	EntityManager::GetInstance()->AddEntity(result);
 	return result;
 }

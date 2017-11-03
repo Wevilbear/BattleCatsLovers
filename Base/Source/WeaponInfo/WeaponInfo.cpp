@@ -166,7 +166,8 @@ void CWeaponInfo::Discharge(Vector3 position, Vector3 target, CPlayerInfo* _sour
 					_source);
 				aProjectile->SetCollider(true);
 				aProjectile->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-				aProjectile->SetScale(0.1);
+				aProjectile->SetScale(Vector3(0.1, 0.1, 0.1));
+				aProjectile->setBoxSizeAABB(Vector3(2, 2, 2));
 				bFire = false;
 				magRounds--;
 			}
@@ -182,7 +183,8 @@ void CWeaponInfo::Discharge(Vector3 position, Vector3 target, CPlayerInfo* _sour
 					_source);
 				aProjectile->SetCollider(true);
 				aProjectile->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-				aProjectile->SetScale(0.1);
+				aProjectile->setBoxSizeAABB(Vector3(2, 2, 2));
+				aProjectile->SetScale(Vector3(0.1, 0.1, 0.1));
 				bFire = false;
 				magRounds--;
 			}

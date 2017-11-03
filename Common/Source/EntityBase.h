@@ -6,6 +6,11 @@
 class EntityBase
 {
 public:
+	enum EntityType
+	{
+		BULLET,
+		ENEMY,
+	};
 	EntityBase();
 	virtual ~EntityBase();
 
@@ -27,12 +32,29 @@ public:
 	// Set the flag to indicate if this entity has a collider class parent
 	virtual void SetCollider(const bool _value);
 
+	void setBoxSizeAABB(Vector3 _boxSize);
+	Vector3 getBoxSizeAABB();
+
+	void setType(EntityType meow)
+	{
+		type = meow;
+	}
+	EntityType getType()
+	{
+		return type;
+	}
+	Vector3 getPos()
+	{
+		return position;
+	}
 protected:
 	Vector3 position;
 	Vector3 scale;
+	Vector3 AABBboxSize;
 
 	bool isDone;
 	bool m_bCollider;
+	EntityType type;
 };
 
 #endif // ENTITY_BASE_H

@@ -45,3 +45,13 @@ void EntityBase::SetCollider(const bool _value)
 {
 	m_bCollider = _value;
 }
+
+void EntityBase::setBoxSizeAABB(Vector3 _boxSize)
+{
+	AABBboxSize.Set(_boxSize.x, _boxSize.y, _boxSize.z);
+}
+
+Vector3 EntityBase::getBoxSizeAABB()
+{
+	return Vector3(AABBboxSize);
+}

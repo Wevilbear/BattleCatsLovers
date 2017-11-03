@@ -1,6 +1,7 @@
 #include "EntityManager.h"
 #include "EntityBase.h"
 #include "Collider/Collider.h"
+#include "Enemy\Enemy3D.h"
 
 #include <iostream>
 using namespace std;
@@ -23,7 +24,7 @@ void EntityManager::Update(double _dt)
 		if ((*it)->IsDone())
 		{
 			// Delete if done
-			delete *it;
+			//delete *it;
 			it = entityList.erase(it);
 		}
 		else
@@ -32,6 +33,7 @@ void EntityManager::Update(double _dt)
 			++it;
 		}
 	}
+	CheckForCollision();
 }
 
 // Render all entities
@@ -91,6 +93,21 @@ EntityManager::~EntityManager()
 {
 }
 
+Vector3 EntityManager::getMinBox(EntityBase * _entity)
+{
+
+	return Vector3((-_entity->getBoxSizeAABB().x / 2) + _entity->getPos().x,
+		(-_entity->getBoxSizeAABB().y / 2) + _entity->getPos().y,
+		(-_entity->getBoxSizeAABB().z / 2) + _entity->getPos().z);
+}
+
+Vector3 EntityManager::getMaxBox(EntityBase * _entity)
+{
+	return Vector3((_entity->getBoxSizeAABB().x / 2) + _entity->getPos().x,
+		(_entity->getBoxSizeAABB().y / 2) + _entity->getPos().y,
+		(_entity->getBoxSizeAABB().z / 2) + _entity->getPos().z);
+}
+
 // Check for overlap
 bool EntityManager::CheckOverlap(Vector3 thisMinAABB, Vector3 thisMaxAABB, Vector3 thatMinAABB, Vector3 thatMaxAABB)
 {	
@@ -106,15 +123,82 @@ bool EntityManager::CheckSphereCollision(EntityBase *ThisEntity, EntityBase *Tha
 }
 
 // Check if this entity collided with another entity, but both must have collider
-bool EntityManager::CheckAABBCollision(CCollider *ThisEntity, CCollider *ThatEntity)
+//bool EntityManager::CheckAABBCollision(CCollider *ThisEntity, CCollider *ThatEntity)
+//{
+//	
+//	return ((ThisEntity->GetMinAABB().x <= ThatEntity->GetMaxAABB().x&& ThisEntity->GetMaxAABB().x >= ThatEntity->GetMinAABB().x)&& (ThisEntity->GetMinAABB().y <= ThatEntity->GetMaxAABB().y&& ThisEntity->GetMaxAABB().y >= ThatEntity->GetMinAABB().y)&& (ThisEntity->GetMinAABB().z <= ThatEntity->GetMaxAABB().z&& ThisEntity->GetMaxAABB().z >= ThatEntity->GetMinAABB().z));
+//}
+
+bool EntityManager::CheckAABBCollision(EntityBase * ThisEntity, EntityBase * ThatEntity)
 {
-	
-	return ((ThisEntity->GetMinAABB().x <= ThatEntity->GetMaxAABB().x&& ThisEntity->GetMaxAABB().x >= ThatEntity->GetMinAABB().x)&& (ThisEntity->GetMinAABB().y <= ThatEntity->GetMaxAABB().y&& ThisEntity->GetMaxAABB().y >= ThatEntity->GetMinAABB().y)&& (ThisEntity->GetMinAABB().z <= ThatEntity->GetMaxAABB().z&& ThisEntity->GetMaxAABB().z >= ThatEntity->GetMinAABB().z));
+	Vector3 thisMin = getMinBox(ThisEntity);
+	Vector3 thisMax = getMaxBox(ThisEntity);
+
+	Vector3 thatMin = getMinBox(ThatEntity);
+	Vector3 thatMax = getMaxBox(ThatEntity);
+
+	if ((thisMin.x <= thatMax.x && thisMax.x >= thatMin.x) &&
+		(thisMin.y <= thatMax.y && thisMax.y >= thatMin.y) &&
+		(thisMin.z <= thatMax.z && thisMax.z >= thatMin.z))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 // Check if any Collider is colliding with another Collider
 bool EntityManager::CheckForCollision(void)
 {
+	for (auto it = EntityManager::GetInstance()->GetEntityList().begin(); it != EntityManager::GetInstance()->GetEntityList().end(); it++)
+	{
+		if ((*it)->getType() == EntityBase::ENEMY)
+		{
+			if (std::next(it) != EntityManager::GetInstance()->GetEntityList().end())
+			{
+				for (auto it2 = std::next(it); it2 != EntityManager::GetInstance()->GetEntityList().end(); it2++)
+				{
+
+					if ((*it2)->getType() == EntityBase::BULLET)
+					{
+						if ((*it) == (*it2))
+							continue;
+
+						if (EntityManager::GetInstance()->CheckAABBCollision(*it, *it2) == true)// will be replaced with AABB in future  
+						{
+							// change direction of first enemy
+							//static_cast<CEnemy3D*> (*it)->unitDistance.x = -(static_cast<CEnemy3D*>(*it)->unitDistance.x);
+							//static_cast<CEnemy3D*>  (*it)->unitDistance.z = -(static_cast<CEnemy3D*>(*it)->unitDistance.z);
+
+							//// update previous position
+							//static_cast<CEnemy3D*>(*it2)->position = static_cast<CEnemy3D*>(*it2)->enemyPrevPos;
+							cout << "Explode" << endl;
+							static_cast<CEnemy3D*> (*it)->SetIsDone(true);
+							static_cast<CEnemy3D*> (*it2)->SetIsDone(true);
+						}
+						else
+						{
+							// update previous position
+							//static_cast<CEnemy3D*>(*it2)->enemyPrevPos = static_cast<CEnemy3D*>(*it2)->position;
+						}
+					}
+					//else if ((*it2)->getType() == EntityBase::E_BULLET)
+					//{
+					//if (EntityManager::GetInstance()->CheckAABBCollision((*it), (*it2)) == true)
+					//{
+					//	static_cast<CProjectile *>((*it2))->SetStatus(false);
+					//	(*it2)->SetIsDone(true);
+
+					//	static_cast<CEnemy3D*>(*it)->_hp -= 5.f;
+					//	break;
+					//}
+					//}
+				}
+			}
+		}
+	}
 	return false;
 }
 bool EntityManager::pointtoAABB(Vector3 pos, Vector3 forward, GenericEntity *ThatEntity)
