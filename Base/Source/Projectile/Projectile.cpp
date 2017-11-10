@@ -188,9 +188,13 @@ void CProjectile::Render(void)
 	if (m_fLifetime < 0.0f)
 		return;
 
+	//theSource = CPlayerInfo::GetInstance();
 	MS& modelStack = GraphicsManager::GetInstance()->GetModelStack();
 	modelStack.PushMatrix();
 	modelStack.Translate(position.x, position.y, position.z);
+	//modelStack.Rotate(Math::RadianToDegree(atan2(theDirection.y - theSource->GetPos().y, theDirection.x - theSource->GetPos().x)), 0, 1, 0);
+	modelStack.Rotate(Math::RadianToDegree(atan2(theDirection.z, theDirection.x)), 0, 1, 0);
+	//cout << Math::RadianToDegree(atan2(theDirection.y - theSource->GetPos().y, theDirection.x - theSource->GetPos().x)) << endl;
 	//modelStack.Scale(scale.x, scale.y, scale.z);
 	RenderHelper::RenderMesh(modelMesh);
 	modelStack.PopMatrix();

@@ -20,9 +20,11 @@ void GenericEntity::Update(double _dt)
 
 void GenericEntity::Render()
 {
+	playerInfo = CPlayerInfo::GetInstance();
 	MS& modelStack = GraphicsManager::GetInstance()->GetModelStack();
 	modelStack.PushMatrix();
 	modelStack.Translate(position.x, position.y, position.z);
+	modelStack.Rotate(playerInfo->GetTarget().y - position.y, 0, 1, 0);
 	modelStack.Scale(scale.x, scale.y, scale.z);
 	RenderHelper::RenderMesh(modelMesh);
 	modelStack.PopMatrix();

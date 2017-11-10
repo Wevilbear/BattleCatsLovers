@@ -2,7 +2,8 @@
 #include "EntityBase.h"
 #include "Collider/Collider.h"
 #include "Enemy\Enemy3D.h"
-
+#include "SceneGraph\SceneGraph.h"
+#include "SceneGraph\SceneNode.h"
 #include <iostream>
 using namespace std;
 
@@ -177,6 +178,18 @@ bool EntityManager::CheckForCollision(void)
 							cout << "Explode" << endl;
 							static_cast<CEnemy3D*> (*it)->SetIsDone(true);
 							static_cast<CEnemy3D*> (*it2)->SetIsDone(true);
+
+							// Remove from Scene Graph
+							if (CSceneGraph::GetInstance()->DeleteNode((*it)) == true)
+							{
+								cout << "*** This Entity removed ***" << endl;
+							}
+							// Remove from Scene Graph
+							if (CSceneGraph::GetInstance()->DeleteNode((*it2)) == true)
+							{
+								cout << "*** That Entity removed ***" << endl;
+							}
+
 						}
 						else
 						{

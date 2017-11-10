@@ -43,6 +43,9 @@
     <Filter Include="CameraEffects">
       <UniqueIdentifier>{70e3c1bb-10b7-426e-8382-b2bafebb873c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SceneGraph">
+      <UniqueIdentifier>{f87a32d3-8107-4ca0-8fee-b0cdedffa549}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -150,6 +153,15 @@
     <ClCompile Include="Furniture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\SceneGraph\SceneGraph.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SceneGraph\SceneNode.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SceneGraph\Transform.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -253,6 +265,15 @@
     </ClInclude>
     <ClInclude Include="Furniture.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneGraph\SceneGraph.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneGraph\SceneNode.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneGraph\Transform.h">
+      <Filter>SceneGraph</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

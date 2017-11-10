@@ -22,6 +22,8 @@
 #include "SkyBox/SkyBoxEntity.h"
 #include "Minimap\Minimap.h"
 #include "../Source/WeaponInfo/WeaponInfo.h"
+#include "SceneGraph\SceneGraph.h"
+#include "SceneGraph\SceneNode.h"
 #include <iostream>
 using namespace std;
 
@@ -227,6 +229,11 @@ void SceneText::Init()
 	anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
 	Enemy.push_back(anEnemy3D);
 
+	CSceneNode*theNode = CSceneGraph::GetInstance()->AddNode(anEnemy3D);
+	if (theNode == NULL)
+	{
+		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
+	}
 	anEnemy3D = Create::Enemy3D("TARGET", Vector3(-20.0f, 0.0f, -20.0f));
 	anEnemy3D->Init();
 	anEnemy3D->SetPos(Vector3(-00.0f, 0.0f, -100));
@@ -234,14 +241,21 @@ void SceneText::Init()
 	anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
 	Enemy.push_back(anEnemy3D);
 
-	anEnemy3D = Create::Enemy3D("TARGET", Vector3(-20.0f, 0.0f, -20.0f));
+	CSceneNode* anotherNode = theNode->AddChild(anEnemy3D);
+	if (anotherNode == NULL)
+	{
+		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
+	}
+
+	anEnemy3D = Create::Enemy3D("TARGET", Vector3(30.0f, 0.0f, -100.0f));
 	anEnemy3D->Init();
 	anEnemy3D->SetPos(Vector3(30.0f, 0.0f, -100));
 	anEnemy3D->SetTerrain(groundEntity);
 	anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
 	Enemy.push_back(anEnemy3D);
 
-
+	//theCube = Create::Entity("Left_Wall", Vector3(0, 0, 0));
+	//theCube->SetPosition(0,0,0)
 
 
 	// Setup the 2D entities

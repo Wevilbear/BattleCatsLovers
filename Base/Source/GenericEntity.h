@@ -4,6 +4,7 @@
 #include "EntityBase.h"
 #include <string>
 #include "Collider/Collider.h"
+#include "PlayerInfo\PlayerInfo.h"
 
 class Mesh;
 
@@ -19,7 +20,7 @@ public:
 	// Set the maxAABB and minAABB
 	void SetPAABB(Vector3 size, Vector3 pos);
 	void SetAABB(Vector3 maxAABB, Vector3 minAABB);
-	
+	CPlayerInfo* playerInfo;
 
 private:
 	Mesh* modelMesh;
