@@ -43,6 +43,11 @@ public:
 	// PrintSelf for debug purposes
 	void PrintSelf(void);
 
+	// Update the Scene Graph
+	void Update(void);
+	// Render the Scene Graph
+	void Render(void);
+
 	// The root of the scene graph. 
 	// It usually does not have a mesh, and is the starting point for all scene graph operations
 	CSceneNode* theRoot;

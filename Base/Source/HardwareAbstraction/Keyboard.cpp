@@ -4,7 +4,9 @@ using namespace std;
 
 #include "KeyboardController.h"
 #include "../PlayerInfo/PlayerInfo.h"
-
+#include "../SceneGraph/SceneNode.h"
+#include "../SceneGraph/SceneGraph.h"
+#include "../Spatial Partition/SpatialPartition.h"
 const bool _CONTROLLER_KEYBOARD_DEBUG = false;
 
 CKeyboard::CKeyboard()
@@ -70,6 +72,18 @@ int CKeyboard::Read(const float deltaTime)
 	// If the user presses R key, then reset the view to default values
 	if (KeyboardController::GetInstance()->IsKeyDown('P'))
 		Reset();
+
+	if (KeyboardController::GetInstance()->IsKeyReleased('M'))
+	{
+		CSceneNode*theNode = CSceneGraph::GetInstance()->GetNode(1);
+		Vector3 pos = theNode->GetEntity()->GetPosition();
+		theNode->GetEntity()->SetPosition(Vector3(pos.x + 50.0f, pos.y, pos.z + 50.0f));
+	}
+
+	if (KeyboardController::GetInstance()->IsKeyReleased('N'))
+	{
+		CSpatialPartition::GetInstance()->PrintSelf();
+	}
 
 	return 0;
 }

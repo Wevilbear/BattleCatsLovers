@@ -24,6 +24,7 @@
 #include "../Source/WeaponInfo/WeaponInfo.h"
 #include "SceneGraph\SceneGraph.h"
 #include "SceneGraph\SceneNode.h"
+
 #include <iostream>
 using namespace std;
 
@@ -193,8 +194,12 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GenerateOBJ("TARGET", "OBJ//target.obj");
 	MeshBuilder::GetInstance()->GetMesh("TARGET")->textureID = LoadTGA("Image//floor_2.tga");
 
-	
+	MeshBuilder::GetInstance()->GenerateCube("cubeSG", Color(1.0f, 0.64f, 0.0f), 1.0f);
 
+	//Set up the spatial partition and pass it to the EntityManager to manage
+	CSpatialPartition::GetInstance()->Init(100, 100, 10, 10);
+	CSpatialPartition::GetInstance()->SetMesh("GRIDMESH");
+	EntityManager::GetInstance()->SetSpatialPartition(CSpatialPartition::GetInstance());
 	
 
 	//theCameraEffects->RifleMesh = MeshBuilder::GetInstance()->GenerateQuad("ARicon", Color(1, 1, 1), 1.f);
@@ -253,6 +258,26 @@ void SceneText::Init()
 	anEnemy3D->SetTerrain(groundEntity);
 	anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
 	Enemy.push_back(anEnemy3D);
+
+	GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
+	CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
+
+	CUpdateTransformation*baseMtx = new CUpdateTransformation();
+	baseMtx->ApplyUpdate(1.0f, 0.0f, 0.0f, 1.0f);
+	baseMtx->SetSteps(-60, 60);
+	baseNode->SetUpdateTransformation(baseMtx);
+
+	GenericEntity* childCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
+	CSceneNode* childNode = baseNode->AddChild(childCube);
+	childNode->ApplyTranslate(0.0f, 1.0f, 0.0f);
+
+	GenericEntity* grandchildCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
+	CSceneNode* grandchildNode = childNode->AddChild(grandchildCube);
+	grandchildNode->ApplyTranslate(0.0f, 0.0f, 1.0f);
+	CUpdateTransformation* aRotateMtx = new CUpdateTransformation();
+	aRotateMtx->ApplyUpdate(1.0f, 0.0f, 0.0f, 1.0f);
+	aRotateMtx->SetSteps(-120, 60);
+	grandchildNode->SetUpdateTransformation(aRotateMtx);
 
 	//theCube = Create::Entity("Left_Wall", Vector3(0, 0, 0));
 	//theCube->SetPosition(0,0,0)

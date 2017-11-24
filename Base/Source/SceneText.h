@@ -15,6 +15,8 @@
 #include "CameraEffects\CameraEffects.h"
 #include "HardwareAbstraction\Mouse.h"
 #include "Projectile\Projectile.h"
+#include "SceneGraph\UpdateTransformation.h"
+
 class ShaderProgram;
 class SceneManager;
 class TextEntity;

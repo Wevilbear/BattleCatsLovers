@@ -46,6 +46,9 @@
     <Filter Include="SceneGraph">
       <UniqueIdentifier>{f87a32d3-8107-4ca0-8fee-b0cdedffa549}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Spatial Partition">
+      <UniqueIdentifier>{f90f8f31-1c6e-4b3b-a886-e6c8c67a0c33}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -162,6 +165,24 @@
     <ClCompile Include="Source\SceneGraph\Transform.cpp">
       <Filter>SceneGraph</Filter>
     </ClCompile>
+    <ClCompile Include="Source\SceneGraph\UpdateTransformation.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\WeaponInfo\GrenadeThrow.cpp">
+      <Filter>WeaponInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Projectile\Grenade.cpp">
+      <Filter>Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Projectile\Laser.cpp">
+      <Filter>Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Spatial Partition\Grid.cpp">
+      <Filter>Spatial Partition</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Spatial Partition\SpatialPartition.cpp">
+      <Filter>Spatial Partition</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -274,6 +295,24 @@
     </ClInclude>
     <ClInclude Include="Source\SceneGraph\Transform.h">
       <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneGraph\UpdateTransformation.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\WeaponInfo\GrenadeThrow.h">
+      <Filter>WeaponInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Projectile\Grenade.h">
+      <Filter>Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Projectile\Laser.h">
+      <Filter>Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Spatial Partition\Grid.h">
+      <Filter>Spatial Partition</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Spatial Partition\SpatialPartition.h">
+      <Filter>Spatial Partition</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

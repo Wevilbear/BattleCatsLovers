@@ -5,8 +5,9 @@
 using namespace std;
 
 #include "EntityBase.h"
+#include "Transform.h"
 
-class CSceneNode
+class CSceneNode : public CTransform
 {
 public:
 	CSceneNode(void);
@@ -51,6 +52,11 @@ public:
 
 	// PrintSelf for debug purposes
 	void PrintSelf(const int numTabs = 0);
+
+	// Update the Scene Graph
+	void Update(void);
+	// Render the Scene Graph
+	void Render(void);
 
 protected:
 	int			ID;

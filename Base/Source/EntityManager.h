@@ -6,6 +6,7 @@
 #include "Vector3.h"
 #include "Collider\Collider.h"
 #include "GenericEntity.h"
+#include "Spatial Partition\SpatialPartition.h"
 
 class EntityBase;
 
@@ -17,7 +18,7 @@ public:
 	void Render();
 	void RenderUI();
 
-	void AddEntity(EntityBase* _newEntity);
+	void AddEntity(EntityBase* _newEntity, bool bAddToSpatialPartition = false);
 	bool RemoveEntity(EntityBase* _existingEntity);
 
 	bool pointtoAABB(Vector3 pos, Vector3 forward, GenericEntity *ThatEntity);
@@ -33,6 +34,10 @@ public:
 	bool CheckAABBCollision(EntityBase *ThisEntity, EntityBase *ThatEntity);
 	bool CheckForCollision(void);
 
+	bool MarkForDeletion(EntityBase*_existingEntity);
+
+	void SetSpatialPartition(CSpatialPartition*theSpatialPartition);
+
 	std::list<EntityBase*> &GetEntityList()
 	{
 		return entityList;
@@ -45,6 +50,8 @@ private:
 	Vector3 getMaxBox(EntityBase * _entity);
 
 	std::list<EntityBase*> entityList;
+	// Handler to Spatial Partition
+	CSpatialPartition* theSpatialPartition;
 };
 
 #endif // ENTITY_MANAGER_H

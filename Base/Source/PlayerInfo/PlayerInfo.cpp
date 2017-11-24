@@ -74,7 +74,9 @@ void CPlayerInfo::Init(void)
 	// Set the pistol as the primary weapon
 	primaryWeapon = new CRifle();
 	primaryWeapon->Init();
-	secondaryWeapon = new CPistol();
+	//secondaryWeapon = new CPistol();
+	//secondaryWeapon->Init();
+	secondaryWeapon = new CGrenadeThrow();
 	secondaryWeapon->Init();
 
 	weaponManager = new CWeaponInfo*[m_iNumOfWeapon];
@@ -228,6 +230,11 @@ Vector3 CPlayerInfo::GetUp(void) const
 double CPlayerInfo::GetJumpAcceleration(void) const
 {
 	return m_dJumpAcceleration;
+}
+
+GroundEntity * CPlayerInfo::GetTerrain(void)
+{
+	return m_pTerrain;
 }
 
 // Update Jump Upwards

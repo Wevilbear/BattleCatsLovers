@@ -3,6 +3,7 @@
 #include "../FPSCamera.h"
 #include "../GroundEntity.h"
 #include "../WeaponInfo/WeaponInfo.h"
+#include "../WeaponInfo/GrenadeThrow.h"
 
 #include <fstream>
 #include <string>
@@ -98,7 +99,8 @@ public:
 	double GetFallSpeed(void) const;
 	// Get Fall Acceleration of the player
 	double GetFallAcceleration(void) const;
-
+	//Get the terrain for the player info
+	GroundEntity * GetTerrain(void);
 	// Update Jump Upwards
 	void UpdateJumpUpwards(double dt = 0.0333f);
 	// Update FreeFall
@@ -158,8 +160,8 @@ public:
 	FPSCamera* attachedCamera;
 
 	CRifle* primaryWeapon;
-	CPistol* secondaryWeapon;
-
+	//CPistol* secondaryWeapon;
+	CGrenadeThrow * secondaryWeapon;
 	// Scrollable weapon switching
 	CWeaponInfo** weaponManager;
 	int m_iCurrentWeapon;

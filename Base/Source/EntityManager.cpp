@@ -7,48 +7,6 @@
 #include <iostream>
 using namespace std;
 
-// Update all entities
-void EntityManager::Update(double _dt)
-{
-	// Update all entities
-	std::list<EntityBase*>::iterator it, end;
-	end = entityList.end();
-	for (it = entityList.begin(); it != end; ++it)
-	{
-		(*it)->Update(_dt);
-	}
-
-	// Clean up entities that are done
-	it = entityList.begin();
-	while (it != end)
-	{
-		if ((*it)->IsDone())
-		{
-			// Delete if done
-			//delete *it;
-			it = entityList.erase(it);
-		}
-		else
-		{
-			// Move on otherwise
-			++it;
-		}
-	}
-	CheckForCollision();
-}
-
-// Render all entities
-void EntityManager::Render()
-{
-	// Render all entities
-	std::list<EntityBase*>::iterator it, end;
-	end = entityList.end();
-	for (it = entityList.begin(); it != end; ++it)
-	{
-		(*it)->Render();
-	}
-}
-
 // Render the UI entities
 void EntityManager::RenderUI()
 {
@@ -62,9 +20,13 @@ void EntityManager::RenderUI()
 }
 
 // Add an entity to this EntityManager
-void EntityManager::AddEntity(EntityBase* _newEntity)
+void EntityManager::AddEntity(EntityBase* _newEntity, bool bAddToSpatialPartition)
 {
 	entityList.push_back(_newEntity);
+
+	//Add to the Spatial Partition
+	if (theSpatialPartition && bAddToSpatialPartition)
+		theSpatialPartition->Add(_newEntity);
 }
 
 // Remove an entity from this EntityManager
@@ -78,6 +40,18 @@ bool EntityManager::RemoveEntity(EntityBase* _existingEntity)
 	{
 		delete *findIter;
 		findIter = entityList.erase(findIter);
+
+		//Remove from SceneNode too
+		if (CSceneGraph::GetInstance()->DeleteNode(_existingEntity))
+		{
+			cout << "EntityManager::RemoveEntity: Unable to remove Node";
+		}
+		else
+		{
+			//Remove from Spatial Partition
+			if (theSpatialPartition)
+				theSpatialPartition->Remove(_existingEntity);
+		}
 		return true;	
 	}
 	// Return false if not found
@@ -214,6 +188,64 @@ bool EntityManager::CheckForCollision(void)
 	}
 	return false;
 }
+
+//Mark an entity for deletion
+bool EntityManager::MarkForDeletion(EntityBase * _existingEntity)
+{
+	//Find the entity's iterator
+	std::list<EntityBase*>::iterator findIter = std::find(entityList.begin(), entityList.end(), _existingEntity);
+
+	//Delete the entity if found
+	if (findIter != entityList.end())
+	{
+		(*findIter)->SetIsDone(true);
+		return true;
+	}
+	//Return false if not found
+	return false;
+}
+//Set a handle to the spatial Partition to this class
+void EntityManager::SetSpatialPartition(CSpatialPartition * theSpatialPartition)
+{
+	this->theSpatialPartition = theSpatialPartition;
+}
+
+void EntityManager::Update(double _dt)
+{
+	// Update all entities
+	std::list<EntityBase*>::iterator it, end;
+	end = entityList.end();
+	for (auto it = EntityManager::GetInstance()->GetEntityList().begin(); it != EntityManager::GetInstance()->GetEntityList().end(); it++)
+	{
+		(*it)->Update(_dt);
+	}
+	//Render the Scene Graph
+	CSceneGraph::GetInstance()->Update();
+
+	//Render the Spatial Partition
+	if (theSpatialPartition)
+		theSpatialPartition->Update();
+
+	CheckForCollision();
+}
+
+void EntityManager::Render()
+{
+	// Update all entities
+	std::list<EntityBase*>::iterator it,
+		end = entityList.end();
+	for (auto it = EntityManager::GetInstance()->GetEntityList().begin(); it != EntityManager::GetInstance()->GetEntityList().end(); it++)
+	{
+		(*it)->Render();
+	}
+	//Render the Scene Graph
+	CSceneGraph::GetInstance()->Render();
+
+	//Render the Spatial Partition
+	if (theSpatialPartition)
+		theSpatialPartition->Render();
+}
+
 bool EntityManager::pointtoAABB(Vector3 pos, Vector3 forward, GenericEntity *ThatEntity)
 {
 	//returna true when in bounds
