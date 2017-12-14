@@ -3,7 +3,7 @@
 #include "Collider\Collider.h"
 #include "GraphicsManager.h"
 #include "RenderHelper.h"
-
+#include "../LevelOfDetails/LevelOfDetails.h"
 template <typename T> vector<T> concat(vector<T> &a, vector<T> &b) {
 	vector<T> ret = vector<T>();
 	copy(a.begin(), a.end(), back_inserter(ret));
@@ -28,6 +28,7 @@ CSpatialPartition::CSpatialPartition(void)
 	, zNumOfGrid(0)
 	, yOffset(0.0f)
 	, _meshName("")
+	,theCamera(NULL)
 {
 }
 
@@ -35,7 +36,8 @@ CSpatialPartition::CSpatialPartition(void)
  Destructor
  ********************************************************************************/
 CSpatialPartition::~CSpatialPartition(void)
-{
+{	
+	theCamera = NULL;
 	delete [] theGrid;
 }
 
@@ -113,13 +115,34 @@ Update the spatial partition
 ********************************************************************************/
 void CSpatialPartition::Update(void)
 {
-	for (int i = 0; i<xNumOfGrid; i++)
-	{
-		for (int j = 0; j<zNumOfGrid; j++)
-		{
-			theGrid[i*zNumOfGrid + j].Update(&MigrationList);
-		}
-	}
+	//for (int i = 0; i<xNumOfGrid; i++)
+	//{
+	//	for (int j = 0; j<zNumOfGrid; j++)
+	//	{
+	//		theGrid[i*zNumOfGrid + j].Update(&MigrationList);
+
+	//		//Check visibility
+	//		if (IsVisible(theCamera->GetCameraPos(), theCamera->GetCameraTarget() - theCamera->GetCameraPos(), i, j) == true)
+	//		{
+	//			//Calculate LOD for this CGrid
+	//			float distance = CalculateDistanceSquare(&(theCamera->GetCameraPos()), i, j);
+	//			if (distance < LevelOfDetails_Distances[0])
+	//			{
+	//				theGrid[i*zNumOfGrid + j].SetDetailLevel(CLevelOfDetails::HIGH_DETAILS);
+	//			}
+	//			else if (distance < LevelOfDetails_Distances[1])
+	//			{
+	//				theGrid[i * zNumOfGrid + j].SetDetailLevel(CLevelOfDetails::MID_DETAILS);
+	//			}
+	//			else
+	//			{
+	//				theGrid[i * zNumOfGrid + j].SetDetailLevel(CLevelOfDetails::LOW_DETAILS);
+	//			}
+	//		}
+	//		else
+	//			theGrid[i * zNumOfGrid + j].SetDetailLevel(CLevelOfDetails::NO_DETAILS);
+	//	}
+	//}
 
 	// If there are objects due for migration, then process them
 	if (MigrationList.empty() == false)
@@ -292,4 +315,33 @@ void CSpatialPartition::PrintSelf() const
 	else
 		cout << "theGrid : NULL" << endl;
 	cout << "******* End of CSpatialPartition::PrintSelf() **********************************" << endl;
+}
+
+void CSpatialPartition::SetCamera(FPSCamera * _cameraPtr)
+{
+}
+
+void CSpatialPartition::RemoveCamera(void)
+{
+}
+
+/********************************************************************************
+Set LOD distances
+********************************************************************************/
+void CSpatialPartition::SetLevelOfDetail(const float distance_HIGH2Mid, const float distance_Mid2Low)
+{
+	LevelOfDetails_Distances[0] = distance_HIGH2Mid;
+	LevelOfDetails_Distances[1] = distance_Mid2Low;
+}
+/********************************************************************************
+Check if a CGrid is visible to the camera
+********************************************************************************/
+bool CSpatialPartition::IsVisible(Vector3 theCameraPosition, Vector3 theCameraDirection, const int xIndex, const int zIndex)
+{
+	float xDistance = (xGridSize*xIndex + (xGridSize >> 1) - (xSize >> 1)) - theCameraPosition.x;
+	float zDistance = (zGridSize*zIndex + (zGridSize >> 1) - (zSize >> 1)) - theCameraPosition.z;
+	Vector3 gridCentre(xDistance, 0, zDistance);
+	if (theCameraDirection.Dot(gridCentre) < 0)
+		return false;
+	return true;
 }

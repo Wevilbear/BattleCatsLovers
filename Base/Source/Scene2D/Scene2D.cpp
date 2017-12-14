@@ -125,7 +125,7 @@ CScene2D::~CScene2D()
 
 	if (thePlayerInfo->DropInstance() == false)
 	{
-		cout << "CScene2D: Unable to drop CPlayerInfo2D class" << endl;
+		//cout << "CScene2D: Unable to drop CPlayerInfo2D class" << endl;
 	}
 	if (m_cRearMap)
 	{

@@ -2,6 +2,7 @@
 #include "stdio.h"
 #include "MeshBuilder.h"
 #include "RenderHelper.h"
+#include "../GenericEntity.h"
 
 /********************************************************************************
 Constructor
@@ -14,6 +15,7 @@ CGrid::CGrid(void)
 	, max(Vector3(-1, -1, -1))
 	, theMesh(NULL)
 	, ListOfObjects(NULL)
+	, theDetailLevel(CLevelOfDetails::NO_DETAILS)
 {
 }
 
@@ -195,7 +197,7 @@ void CGrid::PrintSelf()
 	cout << "\tMin\t:\t" << min << "\tMax\t:\t" << max << endl;
 	if (ListOfObjects.size() > 0)
 	{
-		cout << "\tList of objects in this grid:" << endl;
+		cout << "\tList of objects in this grid: (LOD:" << this->theDetailLevel << ")" << endl;
 		cout << "\t------------------------------------------------------------------------" << endl;
 	}
 	for (int i = 0; i < ListOfObjects.size(); ++i)
@@ -206,3 +208,21 @@ void CGrid::PrintSelf()
 		cout << "\t------------------------------------------------------------------------" << endl;
 	cout << "********************************************************************************" << endl;
 }
+
+ void CGrid::SetDetailLevel(const CLevelOfDetails::DETAIL_LEVEL theDetailLevel)
+ {
+	 this->theDetailLevel = theDetailLevel;
+
+	 //Check each object to see if they are no longer in this grid
+	 std::vector<EntityBase*>::iterator it;
+	 it = ListOfObjects.begin();
+	 while (it != ListOfObjects.end())
+	 {
+		 GenericEntity* theEntity = (GenericEntity*)(*it);
+		 if (theEntity->GetLODStatus())
+		 {
+			 theEntity->SetDetailLevel(theDetailLevel);
+		 }
+		 ++it;
+	 }
+ }

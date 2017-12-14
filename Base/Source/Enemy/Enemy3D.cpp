@@ -10,7 +10,7 @@ CEnemy3D::CEnemy3D(Mesh* _modelMesh)
 	, defaultTarget(Vector3(0.0f, 0.0f, 0.0f))
 	, defaultUp(Vector3(0.0f, 0.0f, 0.0f))
 	, target(Vector3(0.0f, 0.0f, 0.0f))
-	, up(Vector3(0.0f, 0.0f, 0.0f))
+	, up(Vector3(0.0f, 0.0f, 0.0f))  
 	, maxBoundary(Vector3(0.0f, 0.0f, 0.0f))
 	, minBoundary(Vector3(0.0f, 0.0f, 0.0f))
 	, m_pTerrain(NULL)
@@ -45,8 +45,15 @@ void CEnemy3D::Init(void)
 	// Set speed
 	m_dSpeed = 10.0;
 
+	//Initialise the LOD meshes
+	InitLOD("cube", "sphere", "cubeSG");
+
+	//Initialise the Collider
+	this->SetCollider(true);
+	this->SetAABB(Vector3(1, 1, 1), Vector3(-1, -1, -1));
+
 	// Add to EntityManager
-	EntityManager::GetInstance()->AddEntity(this);
+	EntityManager::GetInstance()->AddEntity(this, true);
 
 }
 
@@ -57,8 +64,6 @@ void CEnemy3D::Reset(void)
 	position = defaultPosition;
 	target = defaultTarget;
 	up = defaultUp;
-
-
 }
 
 // Set position
@@ -132,7 +137,7 @@ void CEnemy3D::Update(double dt)
 	m_fElapsedTimeBeforeUpdate += dt;
 	if (m_fElapsedTimeBeforeUpdate > 5.0f)
 	{
-		cout << m_fElapsedTimeBeforeUpdate << endl;
+		//cout << m_fElapsedTimeBeforeUpdate << endl;
 		m_fElapsedTimeBeforeUpdate = 0.0f;
 		if (position.z > 400.0f)
 			target.z = position.z * -1;
@@ -180,7 +185,7 @@ void CEnemy3D::Update2(CCollider player, std::list<GenericEntity*> obj, double d
 	m_fElapsedTimeBeforeUpdate += dt;
 	if (m_fElapsedTimeBeforeUpdate > 5.0f)
 	{
-		cout << m_fElapsedTimeBeforeUpdate << endl;
+		//cout << m_fElapsedTimeBeforeUpdate << endl;
 		m_fElapsedTimeBeforeUpdate = 0.0f;
 
 		if (position.z > 400.0f)
@@ -216,7 +221,14 @@ void CEnemy3D::Render(void)
 	modelStack.PushMatrix();
 	modelStack.Translate(position.x, position.y, position.z);
 	modelStack.Scale(scale.x, scale.y, scale.z);
-	RenderHelper::RenderMesh(modelMesh);
+	if (GetLODStatus())
+	{
+		if (theDetailLevel != NO_DETAILS)
+		{
+			//cout << theDetailLevel << endl;
+			RenderHelper::RenderMesh(modelMesh);
+		}
+	}
 	modelStack.PopMatrix();
 }
 
