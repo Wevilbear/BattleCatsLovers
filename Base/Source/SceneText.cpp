@@ -220,7 +220,8 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GenerateOBJ("high_right_leg", "OBJ//high_right_leg.obj");
 	MeshBuilder::GetInstance()->GetMesh("high_right_leg")->textureID = LoadTGA("Image//dark_green.tga");
 
-	
+	MeshBuilder::GetInstance()->GenerateQuad("GRIDMESH", Color(1, 1, 1), 10.f);
+	MeshBuilder::GetInstance()->GenerateQuad("REDGRIDMESH", Color(1, 0, 0), 10.f);
 
 	//Set up the spatial partition and pass it to the EntityManager to manage
 	CSpatialPartition::GetInstance()->Init(100, 100, 10, 10);
@@ -228,7 +229,6 @@ void SceneText::Init()
 	CSpatialPartition::GetInstance()->SetCamera(&camera);
 	CSpatialPartition::GetInstance()->SetLevelOfDetail(40000.0f, 160000.0f);
 	EntityManager::GetInstance()->SetSpatialPartition(CSpatialPartition::GetInstance());
-	
 
 	//theCameraEffects->RifleMesh = MeshBuilder::GetInstance()->GenerateQuad("ARicon", Color(1, 1, 1), 1.f);
 	//theCameraEffects->RifleMesh->textureID = LoadTGA("Image//rifle_icon.tga");
@@ -255,8 +255,6 @@ void SceneText::Init()
 	groundEntity->SetGrids(Vector3(10.0f, 1.0f, 10.0f));
 	playerInfo->SetTerrain(groundEntity);
 	//anEnemy3D->SetTerrain(groundEntity);
-
-
 	//Robot
 	// Create a CEnemy instance
 	//parent
@@ -424,6 +422,7 @@ void SceneText::Init()
 	//anEnemy3D = new CEnemy3D();
 	//anEnemy3D->Init();
 
+
 	// Setup the 2D entities
 	float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 3.3f;
 	float halfWindowHeight = Application::GetInstance().GetWindowHeight() / 2.3f;
@@ -554,6 +553,14 @@ void SceneText::Update(double dt)
 		lights[0]->position.y -= (float)(10.f * dt);
 	if (KeyboardController::GetInstance()->IsKeyDown('P'))
 		lights[0]->position.y += (float)(10.f * dt);
+	if (KeyboardController::GetInstance()->IsKeyReleased('M'))
+	{
+		CSceneNode* theNode = CSceneGraph::GetInstance()->GetNode(1);
+		Vector3 pos = theNode->GetEntity()->GetPosition();
+		theNode->GetEntity()->SetPosition(Vector3(pos.x + 50.0f, pos.y, pos.z + 50.0f));
+	}
+	if (KeyboardController::GetInstance()->IsKeyReleased('N'))
+		CSpatialPartition::GetInstance()->PrintSelf();
 
 	// if the left mouse button was released
 	if (MouseController::GetInstance()->IsButtonReleased(MouseController::LMB))

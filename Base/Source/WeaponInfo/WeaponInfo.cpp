@@ -2,6 +2,7 @@
 
 #include "../Projectile/Projectile.h"
 #include "../PlayerInfo/PlayerInfo.h"
+#include "../Projectile/Grenade.h"
 #include <iostream>
 using namespace std;
 
@@ -175,12 +176,7 @@ void CWeaponInfo::Discharge(Vector3 position, Vector3 target, CPlayerInfo* _sour
 			{
 				// Create a projectile with a cube mesh. Its position and direction is same as the player.
 				// It will last for 3.0 seconds and travel at 500 units per second
-				CProjectile* aProjectile = Create::Projectile("PISTOL_BULLET",
-					position,
-					(target - position).Normalized(),
-					2.0f,
-					100.0f,
-					_source);
+				CProjectile* aProjectile = Create::Grenade("GRENADE", position, (target - position).Normalized(), 4.0f, 10.0f, _source);
 				aProjectile->SetCollider(true);
 				aProjectile->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
 				aProjectile->setBoxSizeAABB(Vector3(2, 2, 2));

@@ -216,6 +216,6 @@ CMinimap* Create::Minimap(const bool m_bAddToLibrary)
 {
 	CMinimap* result = CMinimap::GetInstance();
 	if (m_bAddToLibrary)
-		EntityManager::GetInstance()->AddEntity(result);
+		EntityManager::GetInstance()->AddEntity(result, false);
 	return result;
 }

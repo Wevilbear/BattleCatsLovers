@@ -252,6 +252,6 @@ CCameraEffects* Create::CameraEffects(const bool m_bAddToLibrary)
 {
 	CCameraEffects* result = CCameraEffects::GetInstance();
 	if (m_bAddToLibrary)
-		EntityManager::GetInstance()->AddEntity(result);
+		EntityManager::GetInstance()->AddEntity(result, false);
 	return result;
 }

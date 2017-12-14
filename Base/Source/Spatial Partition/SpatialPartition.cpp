@@ -61,7 +61,7 @@ bool CSpatialPartition::Init(	const int xGridSize, const int zGridSize,
 
 		// Create an array of grids
 		theGrid = new CGrid[ xNumOfGrid*zNumOfGrid ];
-
+		theCamera = new FPSCamera();
 		// Initialise the array of grids
 		for (int i=0; i<xNumOfGrid; i++)
 		{
@@ -115,34 +115,34 @@ Update the spatial partition
 ********************************************************************************/
 void CSpatialPartition::Update(void)
 {
-	//for (int i = 0; i<xNumOfGrid; i++)
-	//{
-	//	for (int j = 0; j<zNumOfGrid; j++)
-	//	{
-	//		theGrid[i*zNumOfGrid + j].Update(&MigrationList);
+	for (int i = 0; i < xNumOfGrid; i++)
+	{
+		for (int j = 0; j < zNumOfGrid; j++)
+		{
+			theGrid[i*zNumOfGrid + j].Update(&MigrationList);
 
-	//		//Check visibility
-	//		if (IsVisible(theCamera->GetCameraPos(), theCamera->GetCameraTarget() - theCamera->GetCameraPos(), i, j) == true)
-	//		{
-	//			//Calculate LOD for this CGrid
-	//			float distance = CalculateDistanceSquare(&(theCamera->GetCameraPos()), i, j);
-	//			if (distance < LevelOfDetails_Distances[0])
-	//			{
-	//				theGrid[i*zNumOfGrid + j].SetDetailLevel(CLevelOfDetails::HIGH_DETAILS);
-	//			}
-	//			else if (distance < LevelOfDetails_Distances[1])
-	//			{
-	//				theGrid[i * zNumOfGrid + j].SetDetailLevel(CLevelOfDetails::MID_DETAILS);
-	//			}
-	//			else
-	//			{
-	//				theGrid[i * zNumOfGrid + j].SetDetailLevel(CLevelOfDetails::LOW_DETAILS);
-	//			}
-	//		}
-	//		else
-	//			theGrid[i * zNumOfGrid + j].SetDetailLevel(CLevelOfDetails::NO_DETAILS);
-	//	}
-	//}
+			//Check visibility
+			if (IsVisible(theCamera->GetCameraPos(), theCamera->GetCameraTarget() - theCamera->GetCameraPos(), i, j) == true)
+			{
+				//Calculate LOD for this CGrid
+				float distance = CalculateDistanceSquare(&(theCamera->GetCameraPos()), i, j);
+				if (distance < LevelOfDetails_Distances[0])
+				{
+					theGrid[i*zNumOfGrid + j].SetDetailLevel(CLevelOfDetails::HIGH_DETAILS);
+				}
+				else if (distance < LevelOfDetails_Distances[1])
+				{
+					theGrid[i * zNumOfGrid + j].SetDetailLevel(CLevelOfDetails::MID_DETAILS);
+				}
+				else
+				{
+					theGrid[i * zNumOfGrid + j].SetDetailLevel(CLevelOfDetails::LOW_DETAILS);
+				}
+			}
+			else
+				theGrid[i * zNumOfGrid + j].SetDetailLevel(CLevelOfDetails::NO_DETAILS);
+		}
+	}
 
 	// If there are objects due for migration, then process them
 	if (MigrationList.empty() == false)
@@ -169,13 +169,14 @@ void CSpatialPartition::Render(Vector3* theCameraPosition)
 	modelStack.Translate(0.0f, yOffset, 0.0f);
 	for (int i = 0; i<xNumOfGrid; i++)
 	{
-		for (int j = 0; j<zNumOfGrid; j++)
+		for (int j = 0; j < zNumOfGrid; j++)
 		{
 			modelStack.PushMatrix();
 			modelStack.Translate(xGridSize*i - (xSize >> 1), 0.0f, zGridSize*j - (zSize >> 1));
 			modelStack.PushMatrix();
 			modelStack.Scale(xGridSize, 1.0f, zGridSize);
 			modelStack.Rotate(-90, 1, 0, 0);
+			//theGrid[i*zNumOfGrid + j].SetMesh("GenerateQuad");
 			theGrid[i*zNumOfGrid + j].Render();
 			modelStack.PopMatrix();
 			modelStack.PopMatrix();
@@ -267,7 +268,7 @@ void CSpatialPartition::Add(EntityBase* theObject)
 // Remove but not delete object from this grid
 void CSpatialPartition::Remove(EntityBase* theObject)
 {
-	/*
+	
 	// Get the indices of the object's position
 	int xIndex = (((int)theObject->GetPosition().x - (-xSize >> 1)) / (xSize / xNumOfGrid));
 	int zIndex = (((int)theObject->GetPosition().z - (-zSize >> 1)) / (zSize / zNumOfGrid));
@@ -277,7 +278,7 @@ void CSpatialPartition::Remove(EntityBase* theObject)
 	{
 		theGrid[xIndex*zNumOfGrid + zIndex].Remove(theObject);
 	}
-	*/
+	
 }
 
 /********************************************************************************

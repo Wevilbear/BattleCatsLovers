@@ -245,7 +245,7 @@ CEnemy3D* Create::Enemy3D(const std::string& _meshName,
 	result->SetScale(_scale);
 	result->SetCollider(false);
 	result->setType(EntityBase::ENEMY);
-	EntityManager::GetInstance()->AddEntity(result);
+	EntityManager::GetInstance()->AddEntity(result, true);
 	return result;
 }
 
