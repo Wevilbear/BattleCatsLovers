@@ -24,9 +24,15 @@ void GenericEntity::Render()
 	MS& modelStack = GraphicsManager::GetInstance()->GetModelStack();
 	modelStack.PushMatrix();
 	modelStack.Translate(position.x, position.y, position.z);
-	modelStack.Rotate(playerInfo->GetTarget().y - position.y, 0, 1, 0);
+	//modelStack.Rotate(playerInfo->GetTarget().y - position.y, 0, 1, 0);
 	modelStack.Scale(scale.x, scale.y, scale.z);
-	RenderHelper::RenderMesh(modelMesh);
+	if (GetLODStatus() == true)
+	{
+		if (theDetailLevel != NO_DETAILS)
+			RenderHelper::RenderMesh(GetLODMesh());
+	}
+	else
+		RenderHelper::RenderMesh(modelMesh);
 	modelStack.PopMatrix();
 }
 
@@ -43,11 +49,13 @@ void GenericEntity::SetAABB(Vector3 maxAABB, Vector3 minAABB)
 	this->minAABB = minAABB;
 }
 
-GenericEntity* Create::Entity(	const std::string& _meshName, 
-								const Vector3& _position,
-								const Vector3& _scale)
+GenericEntity* Create::Entity(const std::string& _meshName, const Vector3& _position, const Vector3& _scale)
 {
+	//if (_meshName == "PILLAR");
+	//	cout << "pillar" << endl;
+
 	Mesh* modelMesh = MeshBuilder::GetInstance()->GetMesh(_meshName);
+
 	if (modelMesh == nullptr)
 		return nullptr;
 

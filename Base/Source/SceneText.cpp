@@ -196,9 +196,37 @@ void SceneText::Init()
 
 	MeshBuilder::GetInstance()->GenerateCube("cubeSG", Color(1.0f, 0.64f, 0.0f), 1.0f);
 
+	MeshBuilder::GetInstance()->GenerateOBJ("floor", "OBJ//parthenon_floor.obj");
+	MeshBuilder::GetInstance()->GetMesh("floor")->textureID = LoadTGA("Image//newmarble.tga");
+
+	MeshBuilder::GetInstance()->GenerateOBJ("PILLAR", "OBJ//parthenon_pillar.obj");
+	MeshBuilder::GetInstance()->GetMesh("PILLAR")->textureID = LoadTGA("Image//newmarble.tga");
+
+	MeshBuilder::GetInstance()->GenerateOBJ("roof", "OBJ//parthenon_roof.obj");
+	MeshBuilder::GetInstance()->GetMesh("roof")->textureID = LoadTGA("Image//newmarble.tga");
+
+	MeshBuilder::GetInstance()->GenerateOBJ("high_head", "OBJ//high_head.obj");
+	MeshBuilder::GetInstance()->GetMesh("high_head")->textureID = LoadTGA("Image//med_green.tga");
+
+	MeshBuilder::GetInstance()->GenerateOBJ("high_left_arm", "OBJ//high_left_arm.obj");
+	MeshBuilder::GetInstance()->GetMesh("high_left_arm")->textureID = LoadTGA("Image//green.tga");
+
+	MeshBuilder::GetInstance()->GenerateOBJ("high_right_arm", "OBJ//high_right_arm.obj");
+	MeshBuilder::GetInstance()->GetMesh("high_right_arm")->textureID = LoadTGA("Image//green.tga");
+
+	MeshBuilder::GetInstance()->GenerateOBJ("high_left_leg", "OBJ//high_left_leg.obj");
+	MeshBuilder::GetInstance()->GetMesh("high_left_leg")->textureID = LoadTGA("Image//dark_green.tga");
+
+	MeshBuilder::GetInstance()->GenerateOBJ("high_right_leg", "OBJ//high_right_leg.obj");
+	MeshBuilder::GetInstance()->GetMesh("high_right_leg")->textureID = LoadTGA("Image//dark_green.tga");
+
+	
+
 	//Set up the spatial partition and pass it to the EntityManager to manage
 	CSpatialPartition::GetInstance()->Init(100, 100, 10, 10);
 	CSpatialPartition::GetInstance()->SetMesh("GRIDMESH");
+	CSpatialPartition::GetInstance()->SetCamera(&camera);
+	CSpatialPartition::GetInstance()->SetLevelOfDetail(40000.0f, 160000.0f);
 	EntityManager::GetInstance()->SetSpatialPartition(CSpatialPartition::GetInstance());
 	
 
@@ -209,6 +237,7 @@ void SceneText::Init()
 	Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
 	Create::Entity("lightball", Vector3(lights[0]->position.x, lights[0]->position.y, lights[0]->position.z)); // Lightball
 	//GenericEntity* aCube = Create::Entity("cube", Vector3(-20.0f, 0.0f, -20.0f));
+	//aCube->InitLOD("cube","sphere","cubeSG");
 	Create::Entity("ring", Vector3(0.0f, 0.0f, 0.0f)); // Reference
 
 	
@@ -225,39 +254,112 @@ void SceneText::Init()
 	groundEntity->SetScale(Vector3(100.0f, 100.0f, 100.0f));
 	groundEntity->SetGrids(Vector3(10.0f, 1.0f, 10.0f));
 	playerInfo->SetTerrain(groundEntity);
+	//anEnemy3D->SetTerrain(groundEntity);
 
+
+	//Robot
 	// Create a CEnemy instance
-	anEnemy3D = Create::Enemy3D("TARGET", Vector3(-20.0f, 0.0f, -20.0f));
+	//parent
+	anEnemy3D = Create::Enemy3D("high_head", Vector3(-20.0f, 0.0f, -20.0f));
 	anEnemy3D->Init();
 	anEnemy3D->SetPos(Vector3(-30.0f, 0.0f, -100));
 	anEnemy3D->SetTerrain(groundEntity);
 	anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
 	Enemy.push_back(anEnemy3D);
 
-	CSceneNode*theNode = CSceneGraph::GetInstance()->AddNode(anEnemy3D);
-	if (theNode == NULL)
-	{
-		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
-	}
-	anEnemy3D = Create::Enemy3D("TARGET", Vector3(-20.0f, 0.0f, -20.0f));
-	anEnemy3D->Init();
-	anEnemy3D->SetPos(Vector3(-00.0f, 0.0f, -100));
-	anEnemy3D->SetTerrain(groundEntity);
-	anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
-	Enemy.push_back(anEnemy3D);
-
-	CSceneNode* anotherNode = theNode->AddChild(anEnemy3D);
-	if (anotherNode == NULL)
+	CSceneNode*theNode1 = CSceneGraph::GetInstance()->AddNode(anEnemy3D);
+	if (theNode1 == NULL)
 	{
 		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
 	}
 
-	anEnemy3D = Create::Enemy3D("TARGET", Vector3(30.0f, 0.0f, -100.0f));
+	
+	//child
+	anEnemy3D = Create::Enemy3D("high_left_arm", Vector3(-20.0f, 0.0f, -20.0f));
 	anEnemy3D->Init();
-	anEnemy3D->SetPos(Vector3(30.0f, 0.0f, -100));
+	anEnemy3D->SetPos(Vector3(-30.0f, 0.0f, -100));
+	anEnemy3D->SetTerrain(groundEntity);
+	anEnemy3D->SetPAABB((anEnemy3D->GetScale().x * 5, anEnemy3D->GetScale().y *5, anEnemy3D->GetScale().z) *5, anEnemy3D->GetPosition());
+	Enemy.push_back(anEnemy3D);
+
+	CSceneNode* anotherNode1 = theNode1->AddChild(anEnemy3D);
+	if (anotherNode1 == NULL)
+	{
+		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
+	}
+	//child
+	anEnemy3D = Create::Enemy3D("high_right_arm", Vector3(-20.0f, 0.0f, -20.0f));
+	anEnemy3D->Init();
+	anEnemy3D->SetPos(Vector3(-30.0f, 0.0f, -100));
 	anEnemy3D->SetTerrain(groundEntity);
 	anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
 	Enemy.push_back(anEnemy3D);
+
+	CSceneNode* anotherNode2 = theNode1->AddChild(anEnemy3D);
+	if (anotherNode1 == NULL)
+	{
+		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
+	}
+	//child
+	anEnemy3D = Create::Enemy3D("high_left_leg", Vector3(-20.0f, 0.0f, -20.0f));
+	anEnemy3D->Init();
+	anEnemy3D->SetPos(Vector3(-30.0f, 0.0f, -100));
+	anEnemy3D->SetTerrain(groundEntity);
+	anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
+	Enemy.push_back(anEnemy3D);
+
+	CSceneNode* anotherNode3 = theNode1->AddChild(anEnemy3D);
+	if (anotherNode1 == NULL)
+	{
+		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
+	}
+	//child
+	anEnemy3D = Create::Enemy3D("high_right_leg", Vector3(-20.0f, 0.0f, -20.0f));
+	anEnemy3D->Init();
+	anEnemy3D->SetPos(Vector3(-30.0f, 0.0f, -100));
+	anEnemy3D->SetTerrain(groundEntity);
+	anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
+	Enemy.push_back(anEnemy3D);
+
+	CSceneNode* anotherNode4 = theNode1->AddChild(anEnemy3D);
+	if (anotherNode1 == NULL)
+	{
+		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
+	}
+
+
+	// Create a CEnemy instance
+	///*anEnemy3D = Create::Enemy3D("TARGET", Vector3(-20.0f, 0.0f, -20.0f));
+	//anEnemy3D->Init();
+	//anEnemy3D->SetPos(Vector3(-30.0f, 0.0f, -100));
+	//anEnemy3D->SetTerrain(groundEntity);
+	//anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
+	//Enemy.push_back(anEnemy3D);
+
+	//CSceneNode*theNode = CSceneGraph::GetInstance()->AddNode(anEnemy3D);
+	//if (theNode == NULL)
+	//{
+	//	cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
+	//}
+	//anEnemy3D = Create::Enemy3D("TARGET", Vector3(-20.0f, 0.0f, -20.0f));
+	//anEnemy3D->Init();
+	//anEnemy3D->SetPos(Vector3(-00.0f, 0.0f, -100));
+	//anEnemy3D->SetTerrain(groundEntity);
+	//anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
+	//Enemy.push_back(anEnemy3D);
+
+	//CSceneNode* anotherNode = theNode->AddChild(anEnemy3D);
+	//if (anotherNode == NULL)
+	//{
+	//	cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
+	//}
+
+	//anEnemy3D = Create::Enemy3D("TARGET", Vector3(30.0f, 0.0f, -100.0f));
+	//anEnemy3D->Init();
+	//anEnemy3D->SetPos(Vector3(30.0f, 0.0f, -100));
+	//anEnemy3D->SetTerrain(groundEntity);
+	//anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
+	//Enemy.push_back(anEnemy3D);*/
 
 	GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
 	CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
@@ -279,9 +381,48 @@ void SceneText::Init()
 	aRotateMtx->SetSteps(-120, 60);
 	grandchildNode->SetUpdateTransformation(aRotateMtx);
 
+	theCube = Create::Entity("floor", Vector3(0.0f, 0.0f, 0.0f));//Create::Enemy3D("floor", Vector3(30.0f, -50.0f, -100.0f));
+	theCube->SetScale(Vector3(30, 10, 30));
+	theCube->SetPosition(Vector3(0, -9.f, 0));
+	theCube->SetPAABB(Vector3(theCube->GetScale().x, theCube->GetScale().y, theCube->GetScale().z), theCube->GetPosition());
+	Objects.push_back(theCube);
+
+	for (int x = 0; x < 256; x+=32)
+	{
+		theCube = Create::Entity("PILLAR", Vector3(0.0f, 0.0f, 0.0f));//Create::Enemy3D("floor", Vector3(30.0f, -50.0f, -100.0f));
+		theCube->SetScale(Vector3(30, 30, 30));
+		theCube->SetPosition(Vector3(x, -9.f, 0));
+		theCube->SetPAABB(Vector3(theCube->GetScale().x, theCube->GetScale().y, theCube->GetScale().z), theCube->GetPosition());
+		Objects.push_back(theCube);
+	}
+	for (int x = 0; x < 256; x += 32)
+	{
+		theCube = Create::Entity("PILLAR", Vector3(0.0f, 0.0f, 0.0f));//Create::Enemy3D("floor", Vector3(30.0f, -50.0f, -100.0f));
+		theCube->SetScale(Vector3(30, 30, 30));
+		theCube->SetPosition(Vector3(x, -9.f, 220));
+		theCube->SetPAABB(Vector3(theCube->GetScale().x, theCube->GetScale().y, theCube->GetScale().z), theCube->GetPosition());
+		Objects.push_back(theCube);
+	}
+	theCube = Create::Entity("roof", Vector3(0.0f, 0.0f, 0.0f));//Create::Enemy3D("floor", Vector3(30.0f, -50.0f, -100.0f));
+	theCube->SetScale(Vector3(30, 30, 30));
+	theCube->SetPosition(Vector3(0, -7.f, -3));
+	theCube->SetPAABB(Vector3(theCube->GetScale().x, theCube->GetScale().y, theCube->GetScale().z), theCube->GetPosition());
+	Objects.push_back(theCube);
+	//for (int x = 0; x < 256; x += 32)
+	//{
+	//	theCube = Create::Entity("pillar", Vector3(0, 0.0f, -0));//Create::Enemy3D("floor", Vector3(30.0f, -50.0f, -100.0f));
+	//	theCube->SetScale(Vector3(30, 30, 30));
+	//	theCube->SetPosition(Vector3(x, -9.f, 200));
+	//	theCube->SetPAABB(Vector3(theCube->GetScale().x, theCube->GetScale().y, theCube->GetScale().z), theCube->GetPosition());
+	//	Objects.push_back(theCube);
+	//}
+	
+	
+
 	//theCube = Create::Entity("Left_Wall", Vector3(0, 0, 0));
 	//theCube->SetPosition(0,0,0)
-
+	//anEnemy3D = new CEnemy3D();
+	//anEnemy3D->Init();
 
 	// Setup the 2D entities
 	float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 3.3f;

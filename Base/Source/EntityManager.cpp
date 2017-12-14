@@ -226,6 +226,23 @@ void EntityManager::Update(double _dt)
 	if (theSpatialPartition)
 		theSpatialPartition->Update();
 
+	// Clean up entities that are done
+	it = entityList.begin();
+	while (it != end)
+	{
+		if ((*it)->IsDone())
+		{
+			// Delete if done
+			//delete *it;
+			it = entityList.erase(it);
+		}
+		else
+		{
+			// Move on otherwise
+			++it;
+		}
+	}
+
 	CheckForCollision();
 }
 

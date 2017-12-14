@@ -5,10 +5,11 @@
 #include <string>
 #include "Collider/Collider.h"
 #include "PlayerInfo\PlayerInfo.h"
+#include "LevelOfDetails\LevelOfDetails.h"
 
 class Mesh;
 
-class GenericEntity : public EntityBase, public CCollider
+class GenericEntity : public EntityBase, public CCollider, public CLevelOfDetails
 {
 public:
 	GenericEntity(Mesh* _modelMesh);

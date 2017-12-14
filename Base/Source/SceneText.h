@@ -16,6 +16,7 @@
 #include "HardwareAbstraction\Mouse.h"
 #include "Projectile\Projectile.h"
 #include "SceneGraph\UpdateTransformation.h"
+#include "Enemy\Enemy3D.h"
 
 class ShaderProgram;
 class SceneManager;
