@@ -220,6 +220,38 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GenerateOBJ("high_right_leg", "OBJ//high_right_leg.obj");
 	MeshBuilder::GetInstance()->GetMesh("high_right_leg")->textureID = LoadTGA("Image//dark_green.tga");
 
+	//yellow
+	MeshBuilder::GetInstance()->GenerateOBJ("med_head", "OBJ//med_head.obj");
+	MeshBuilder::GetInstance()->GetMesh("med_head")->textureID = LoadTGA("Image//med_yellow.tga");
+
+	MeshBuilder::GetInstance()->GenerateOBJ("med_left_arm", "OBJ//med_left_arm.obj");
+	MeshBuilder::GetInstance()->GetMesh("med_left_arm")->textureID = LoadTGA("Image//yellow.tga");
+
+	MeshBuilder::GetInstance()->GenerateOBJ("med_right_arm", "OBJ//med_right_arm.obj");
+	MeshBuilder::GetInstance()->GetMesh("med_right_arm")->textureID = LoadTGA("Image//yellow.tga");
+
+	MeshBuilder::GetInstance()->GenerateOBJ("med_left_leg", "OBJ//med_left_leg.obj");
+	MeshBuilder::GetInstance()->GetMesh("med_left_leg")->textureID = LoadTGA("Image//dark_yellow.tga");
+
+	MeshBuilder::GetInstance()->GenerateOBJ("med_right_leg", "OBJ//med_right_leg.obj");
+	MeshBuilder::GetInstance()->GetMesh("med_right_leg")->textureID = LoadTGA("Image//dark_yellow.tga");
+
+	//red
+	MeshBuilder::GetInstance()->GenerateOBJ("low_head", "OBJ//low_head.obj");
+	MeshBuilder::GetInstance()->GetMesh("low_head")->textureID = LoadTGA("Image//med_red.tga");
+
+	MeshBuilder::GetInstance()->GenerateOBJ("low_left_arm", "OBJ//low_left_arm.obj");
+	MeshBuilder::GetInstance()->GetMesh("low_left_arm")->textureID = LoadTGA("Image//red.tga");
+
+	MeshBuilder::GetInstance()->GenerateOBJ("low_right_arm", "OBJ//low_right_arm.obj");
+	MeshBuilder::GetInstance()->GetMesh("low_right_arm")->textureID = LoadTGA("Image//red.tga");
+
+	MeshBuilder::GetInstance()->GenerateOBJ("low_left_leg", "OBJ//low_left_leg.obj");
+	MeshBuilder::GetInstance()->GetMesh("low_left_leg")->textureID = LoadTGA("Image//dark_red.tga");
+
+	MeshBuilder::GetInstance()->GenerateOBJ("low_right_leg", "OBJ//low_right_leg.obj");
+	MeshBuilder::GetInstance()->GetMesh("low_right_leg")->textureID = LoadTGA("Image//dark_red.tga");
+
 	
 
 	//Set up the spatial partition and pass it to the EntityManager to manage
@@ -262,9 +294,10 @@ void SceneText::Init()
 	//parent
 	anEnemy3D = Create::Enemy3D("high_head", Vector3(-20.0f, 0.0f, -20.0f));
 	anEnemy3D->Init();
-	anEnemy3D->SetPos(Vector3(-30.0f, 0.0f, -100));
+	anEnemy3D->SetPos(Vector3(-30.0f, -20.0f, -100));
 	anEnemy3D->SetTerrain(groundEntity);
 	anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
+	anEnemy3D->InitLOD("high_head", "med_head", "low_head");
 	Enemy.push_back(anEnemy3D);
 
 	CSceneNode*theNode1 = CSceneGraph::GetInstance()->AddNode(anEnemy3D);
@@ -280,6 +313,7 @@ void SceneText::Init()
 	anEnemy3D->SetPos(Vector3(-30.0f, 0.0f, -100));
 	anEnemy3D->SetTerrain(groundEntity);
 	anEnemy3D->SetPAABB((anEnemy3D->GetScale().x * 5, anEnemy3D->GetScale().y *5, anEnemy3D->GetScale().z) *5, anEnemy3D->GetPosition());
+	anEnemy3D->InitLOD("high_left_arm", "med_left_arm", "low_left_arm");
 	Enemy.push_back(anEnemy3D);
 
 	CSceneNode* anotherNode1 = theNode1->AddChild(anEnemy3D);
@@ -293,6 +327,7 @@ void SceneText::Init()
 	anEnemy3D->SetPos(Vector3(-30.0f, 0.0f, -100));
 	anEnemy3D->SetTerrain(groundEntity);
 	anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
+	anEnemy3D->InitLOD("high_right_arm", "med_right_arm", "low_right_arm");
 	Enemy.push_back(anEnemy3D);
 
 	CSceneNode* anotherNode2 = theNode1->AddChild(anEnemy3D);
@@ -306,6 +341,7 @@ void SceneText::Init()
 	anEnemy3D->SetPos(Vector3(-30.0f, 0.0f, -100));
 	anEnemy3D->SetTerrain(groundEntity);
 	anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
+	anEnemy3D->InitLOD("high_left_leg", "med_left_leg", "low_left_leg");
 	Enemy.push_back(anEnemy3D);
 
 	CSceneNode* anotherNode3 = theNode1->AddChild(anEnemy3D);
@@ -319,6 +355,7 @@ void SceneText::Init()
 	anEnemy3D->SetPos(Vector3(-30.0f, 0.0f, -100));
 	anEnemy3D->SetTerrain(groundEntity);
 	anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
+	anEnemy3D->InitLOD("high_right_leg", "med_right_leg", "low_right_leg");
 	Enemy.push_back(anEnemy3D);
 
 	CSceneNode* anotherNode4 = theNode1->AddChild(anEnemy3D);
