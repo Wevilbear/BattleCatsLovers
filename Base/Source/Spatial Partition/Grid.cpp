@@ -103,15 +103,15 @@ RenderObjects
 ********************************************************************************/
 void CGrid::RenderObjects(const int RESOLUTION)
 {
-	/*
+	
 	glPushAttrib(GL_ENABLE_BIT);
 	// Draw the Grid and its list of objects
 	for (int i=0; i<(int)ListOfObjects.size(); i++)
 	{
-	ListOfObjects[i]->Render(RESOLUTION);
+	ListOfObjects[i]->Render();//RESOLUTION
 	}
 	glPopAttrib();
-	*/
+	
 }
 
 /********************************************************************************

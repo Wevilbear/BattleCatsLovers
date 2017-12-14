@@ -42,7 +42,7 @@ bool EntityManager::RemoveEntity(EntityBase* _existingEntity)
 		findIter = entityList.erase(findIter);
 
 		//Remove from SceneNode too
-		if (CSceneGraph::GetInstance()->DeleteNode(_existingEntity))
+		if (!CSceneGraph::GetInstance()->DeleteNode(_existingEntity))
 		{
 			cout << "EntityManager::RemoveEntity: Unable to remove Node";
 		}
@@ -52,7 +52,7 @@ bool EntityManager::RemoveEntity(EntityBase* _existingEntity)
 			if (theSpatialPartition)
 				theSpatialPartition->Remove(_existingEntity);
 		}
-		return true;	
+		return true;
 	}
 	// Return false if not found
 	return false;
@@ -85,8 +85,8 @@ Vector3 EntityManager::getMaxBox(EntityBase * _entity)
 
 // Check for overlap
 bool EntityManager::CheckOverlap(Vector3 thisMinAABB, Vector3 thisMaxAABB, Vector3 thatMinAABB, Vector3 thatMaxAABB)
-{	
-	return 
+{
+	return
 		((thisMinAABB.x <= thatMaxAABB.x && thisMaxAABB.x >= thatMinAABB.x) && (thisMinAABB.y <= thatMaxAABB.y && thisMaxAABB.y >= thatMinAABB.y) && (thisMinAABB.z <= thatMaxAABB.z && thisMaxAABB.z >= thatMinAABB.z));
 }
 
@@ -152,6 +152,7 @@ bool EntityManager::CheckForCollision(void)
 							cout << "Explode" << endl;
 							static_cast<CEnemy3D*> (*it)->SetIsDone(true);
 							static_cast<CEnemy3D*> (*it2)->SetIsDone(true);
+
 
 							// Remove from Scene Graph
 							if (CSceneGraph::GetInstance()->DeleteNode((*it)) == true)
@@ -219,29 +220,28 @@ void EntityManager::Update(double _dt)
 	{
 		(*it)->Update(_dt);
 	}
+
+	it = entityList.begin();
+	while (it != end)
+	{
+		if ((*it)->IsDone())
+		{
+			it = entityList.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+
+	}
+
+
 	//Render the Scene Graph
 	CSceneGraph::GetInstance()->Update();
 
 	//Render the Spatial Partition
 	if (theSpatialPartition)
 		theSpatialPartition->Update();
-
-	// Clean up entities that are done
-	it = entityList.begin();
-	while (it != end)
-	{
-		if ((*it)->IsDone())
-		{
-			// Delete if done
-			//delete *it;
-			it = entityList.erase(it);
-		}
-		else
-		{
-			// Move on otherwise
-			++it;
-		}
-	}
 
 	CheckForCollision();
 }

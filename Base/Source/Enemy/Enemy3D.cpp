@@ -49,7 +49,7 @@ void CEnemy3D::Init(void)
 	InitLOD("cube", "sphere", "cubeSG");
 
 	//Initialise the Collider
-	this->SetCollider(true);
+	this->SetCollider(false);
 	this->SetAABB(Vector3(1, 1, 1), Vector3(-1, -1, -1));
 
 	// Add to EntityManager
@@ -221,14 +221,14 @@ void CEnemy3D::Render(void)
 	modelStack.PushMatrix();
 	modelStack.Translate(position.x, position.y, position.z);
 	modelStack.Scale(scale.x, scale.y, scale.z);
-	if (GetLODStatus())
-	{
-		if (theDetailLevel != NO_DETAILS)
-		{
+	//if (GetLODStatus())
+	//{
+	//	if (theDetailLevel != NO_DETAILS)
+	//	{
 			//cout << theDetailLevel << endl;
 			RenderHelper::RenderMesh(modelMesh);
-		}
-	}
+	//	}
+	//}
 	modelStack.PopMatrix();
 }
 
@@ -245,7 +245,7 @@ CEnemy3D* Create::Enemy3D(const std::string& _meshName,
 	result->SetScale(_scale);
 	result->SetCollider(false);
 	result->setType(EntityBase::ENEMY);
-	EntityManager::GetInstance()->AddEntity(result);
+	EntityManager::GetInstance()->AddEntity(result, true);
 	return result;
 }
 

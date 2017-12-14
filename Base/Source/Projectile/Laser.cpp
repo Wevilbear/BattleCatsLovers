@@ -132,7 +132,7 @@ CLaser* Create::Laser(const std::string& _meshName,
 	result->SetStatus(true);
 	result->SetCollider(true);
 	result->SetSource(_source);
-	EntityManager::GetInstance()->AddEntity(result);
+	EntityManager::GetInstance()->AddEntity(result, true);
 
 	Vector3 base = Vector3(1.0f, 0.0f, 0.0f);
 	result->CalculateAngles();
