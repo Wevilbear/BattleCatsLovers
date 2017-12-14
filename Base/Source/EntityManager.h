@@ -18,7 +18,7 @@ public:
 	void Render();
 	void RenderUI();
 
-	void AddEntity(EntityBase* _newEntity, bool bAddToSpatialPartition = false);
+	void AddEntity(EntityBase* _newEntity, bool bAddToSpatialPartition);
 	bool RemoveEntity(EntityBase* _existingEntity);
 
 	bool pointtoAABB(Vector3 pos, Vector3 forward, GenericEntity *ThatEntity);

@@ -115,9 +115,9 @@ Update the spatial partition
 ********************************************************************************/
 void CSpatialPartition::Update(void)
 {
-	for (int i = 0; i<xNumOfGrid; i++)
+	for (int i = 0; i < xNumOfGrid; i++)
 	{
-		for (int j = 0; j<zNumOfGrid; j++)
+		for (int j = 0; j < zNumOfGrid; j++)
 		{
 			theGrid[i*zNumOfGrid + j].Update(&MigrationList);
 
@@ -129,29 +129,14 @@ void CSpatialPartition::Update(void)
 				if (distance < LevelOfDetails_Distances[0])
 				{
 					theGrid[i*zNumOfGrid + j].SetDetailLevel(CLevelOfDetails::HIGH_DETAILS);
-					//if (_meshName != "GRIDMESH")
-					//{
-					//	if (_meshName == "high_head" || _meshName == "med_head" || _meshName == "low_head")
-					//	{
-					//		cout << "head" << endl;
-					//	}
-					//}
 				}
 				else if (distance < LevelOfDetails_Distances[1])
 				{
 					theGrid[i * zNumOfGrid + j].SetDetailLevel(CLevelOfDetails::MID_DETAILS);
-					//if (_meshName == "high_head" || _meshName == "med_head" || _meshName == "low_head")
-					//{
-					//	cout << "head" << endl;
-					//}
 				}
 				else
 				{
 					theGrid[i * zNumOfGrid + j].SetDetailLevel(CLevelOfDetails::LOW_DETAILS);
-					//if (_meshName == "high_head" || _meshName == "med_head" || _meshName == "low_head")
-					//{
-					//	cout << "head" << endl;
-					//}
 				}
 			}
 			else
@@ -184,13 +169,14 @@ void CSpatialPartition::Render(Vector3* theCameraPosition)
 	modelStack.Translate(0.0f, yOffset, 0.0f);
 	for (int i = 0; i<xNumOfGrid; i++)
 	{
-		for (int j = 0; j<zNumOfGrid; j++)
+		for (int j = 0; j < zNumOfGrid; j++)
 		{
 			modelStack.PushMatrix();
 			modelStack.Translate(xGridSize*i - (xSize >> 1), 0.0f, zGridSize*j - (zSize >> 1));
 			modelStack.PushMatrix();
 			modelStack.Scale(xGridSize, 1.0f, zGridSize);
 			modelStack.Rotate(-90, 1, 0, 0);
+			//theGrid[i*zNumOfGrid + j].SetMesh("GenerateQuad");
 			theGrid[i*zNumOfGrid + j].Render();
 			modelStack.PopMatrix();
 			modelStack.PopMatrix();
@@ -300,13 +286,10 @@ void CSpatialPartition::Remove(EntityBase* theObject)
  ********************************************************************************/
 float CSpatialPartition::CalculateDistanceSquare(Vector3* theCameraPosition, const int xIndex, const int zIndex)
 {
-	//float xDistance = (xIndex * xNumOfGrid + (xSize / 2)) - theCameraPosition->x;
-	//float yDistance = (zIndex * zNumOfGrid + (zSize / 2)) - theCameraPosition->z;
+	float xDistance = (xIndex * xNumOfGrid + (xSize / 2)) - theCameraPosition->x;
+	float yDistance = (zIndex * zNumOfGrid + (zSize / 2)) - theCameraPosition->z;
 
-	float xDistance = (xGridSize*xIndex + (xGridSize >> 1) - (xSize >> 1)) - theCameraPosition->x;
-	float zDistance = (zGridSize*xIndex + (zGridSize >> 1) - (zSize >> 1)) - theCameraPosition->z;
-
-	return (float) ( xDistance*xDistance + zDistance*zDistance );
+	return (float) ( xDistance*xDistance + yDistance*yDistance );
 }
 
 
@@ -358,8 +341,6 @@ bool CSpatialPartition::IsVisible(Vector3 theCameraPosition, Vector3 theCameraDi
 {
 	float xDistance = (xGridSize*xIndex + (xGridSize >> 1) - (xSize >> 1)) - theCameraPosition.x;
 	float zDistance = (zGridSize*zIndex + (zGridSize >> 1) - (zSize >> 1)) - theCameraPosition.z;
-	if (xDistance*xDistance + zDistance*zDistance < (xGridSize*xGridSize + zGridSize*zGridSize))
-		return true;
 	Vector3 gridCentre(xDistance, 0, zDistance);
 	if (theCameraDirection.Dot(gridCentre) < 0)
 		return false;

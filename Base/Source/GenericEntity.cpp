@@ -77,6 +77,7 @@ GenericEntity*Create::Asset(const std::string&_meshName,const Vector3&_position,
 	result->SetPosition(_position);
 	result->SetScale(_scale);
 	result->SetCollider(false);
+	EntityManager::GetInstance()->AddEntity(result, true);
 	return result;
 }
 

@@ -205,62 +205,14 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GenerateOBJ("roof", "OBJ//parthenon_roof.obj");
 	MeshBuilder::GetInstance()->GetMesh("roof")->textureID = LoadTGA("Image//newmarble.tga");
 
-	MeshBuilder::GetInstance()->GenerateOBJ("high_head", "OBJ//high_head.obj");
-	MeshBuilder::GetInstance()->GetMesh("high_head")->textureID = LoadTGA("Image//med_green.tga");
-
-	MeshBuilder::GetInstance()->GenerateOBJ("high_left_arm", "OBJ//high_left_arm.obj");
-	MeshBuilder::GetInstance()->GetMesh("high_left_arm")->textureID = LoadTGA("Image//green.tga");
-
-	MeshBuilder::GetInstance()->GenerateOBJ("high_right_arm", "OBJ//high_right_arm.obj");
-	MeshBuilder::GetInstance()->GetMesh("high_right_arm")->textureID = LoadTGA("Image//green.tga");
-
-	MeshBuilder::GetInstance()->GenerateOBJ("high_left_leg", "OBJ//high_left_leg.obj");
-	MeshBuilder::GetInstance()->GetMesh("high_left_leg")->textureID = LoadTGA("Image//dark_green.tga");
-
-	MeshBuilder::GetInstance()->GenerateOBJ("high_right_leg", "OBJ//high_right_leg.obj");
-	MeshBuilder::GetInstance()->GetMesh("high_right_leg")->textureID = LoadTGA("Image//dark_green.tga");
-
-	//yellow
-	MeshBuilder::GetInstance()->GenerateOBJ("med_head", "OBJ//med_head.obj");
-	MeshBuilder::GetInstance()->GetMesh("med_head")->textureID = LoadTGA("Image//med_yellow.tga");
-
-	MeshBuilder::GetInstance()->GenerateOBJ("med_left_arm", "OBJ//med_left_arm.obj");
-	MeshBuilder::GetInstance()->GetMesh("med_left_arm")->textureID = LoadTGA("Image//yellow.tga");
-
-	MeshBuilder::GetInstance()->GenerateOBJ("med_right_arm", "OBJ//med_right_arm.obj");
-	MeshBuilder::GetInstance()->GetMesh("med_right_arm")->textureID = LoadTGA("Image//yellow.tga");
-
-	MeshBuilder::GetInstance()->GenerateOBJ("med_left_leg", "OBJ//med_left_leg.obj");
-	MeshBuilder::GetInstance()->GetMesh("med_left_leg")->textureID = LoadTGA("Image//dark_yellow.tga");
-
-	MeshBuilder::GetInstance()->GenerateOBJ("med_right_leg", "OBJ//med_right_leg.obj");
-	MeshBuilder::GetInstance()->GetMesh("med_right_leg")->textureID = LoadTGA("Image//dark_yellow.tga");
-
-	//red
-	MeshBuilder::GetInstance()->GenerateOBJ("low_head", "OBJ//low_head.obj");
-	MeshBuilder::GetInstance()->GetMesh("low_head")->textureID = LoadTGA("Image//med_red.tga");
-
-	MeshBuilder::GetInstance()->GenerateOBJ("low_left_arm", "OBJ//low_left_arm.obj");
-	MeshBuilder::GetInstance()->GetMesh("low_left_arm")->textureID = LoadTGA("Image//red.tga");
-
-	MeshBuilder::GetInstance()->GenerateOBJ("low_right_arm", "OBJ//low_right_arm.obj");
-	MeshBuilder::GetInstance()->GetMesh("low_right_arm")->textureID = LoadTGA("Image//red.tga");
-
-	MeshBuilder::GetInstance()->GenerateOBJ("low_left_leg", "OBJ//low_left_leg.obj");
-	MeshBuilder::GetInstance()->GetMesh("low_left_leg")->textureID = LoadTGA("Image//dark_red.tga");
-
-	MeshBuilder::GetInstance()->GenerateOBJ("low_right_leg", "OBJ//low_right_leg.obj");
-	MeshBuilder::GetInstance()->GetMesh("low_right_leg")->textureID = LoadTGA("Image//dark_red.tga");
-
-	
-
+	MeshBuilder::GetInstance()->GenerateQuad("GRIDMESH", Color(1, 1, 1), 10.f);
+	MeshBuilder::GetInstance()->GenerateQuad("REDGRIDMESH", Color(1, 0, 0), 10.f);
 	//Set up the spatial partition and pass it to the EntityManager to manage
 	CSpatialPartition::GetInstance()->Init(100, 100, 10, 10);
 	CSpatialPartition::GetInstance()->SetMesh("GRIDMESH");
 	CSpatialPartition::GetInstance()->SetCamera(&camera);
 	CSpatialPartition::GetInstance()->SetLevelOfDetail(40000.0f, 160000.0f);
 	EntityManager::GetInstance()->SetSpatialPartition(CSpatialPartition::GetInstance());
-	
 
 	//theCameraEffects->RifleMesh = MeshBuilder::GetInstance()->GenerateQuad("ARicon", Color(1, 1, 1), 1.f);
 	//theCameraEffects->RifleMesh->textureID = LoadTGA("Image//rifle_icon.tga");
@@ -288,115 +240,38 @@ void SceneText::Init()
 	playerInfo->SetTerrain(groundEntity);
 	//anEnemy3D->SetTerrain(groundEntity);
 
-
-	//Robot
 	// Create a CEnemy instance
-	//parent
-	anEnemy3D = Create::Enemy3D("high_head", Vector3(-20.0f, 0.0f, -20.0f));
-	anEnemy3D->Init();
-	anEnemy3D->SetPos(Vector3(-30.0f, -20.0f, -100));
-	anEnemy3D->SetTerrain(groundEntity);
-	anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
-	anEnemy3D->InitLOD("high_head", "med_head", "low_head");
-	Enemy.push_back(anEnemy3D);
-
-	CSceneNode*theNode1 = CSceneGraph::GetInstance()->AddNode(anEnemy3D);
-	if (theNode1 == NULL)
-	{
-		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
-	}
-
-	
-	//child
-	anEnemy3D = Create::Enemy3D("high_left_arm", Vector3(-20.0f, 0.0f, -20.0f));
-	anEnemy3D->Init();
-	anEnemy3D->SetPos(Vector3(-30.0f, 0.0f, -100));
-	anEnemy3D->SetTerrain(groundEntity);
-	anEnemy3D->SetPAABB((anEnemy3D->GetScale().x * 5, anEnemy3D->GetScale().y *5, anEnemy3D->GetScale().z) *5, anEnemy3D->GetPosition());
-	anEnemy3D->InitLOD("high_left_arm", "med_left_arm", "low_left_arm");
-	Enemy.push_back(anEnemy3D);
-
-	CSceneNode* anotherNode1 = theNode1->AddChild(anEnemy3D);
-	if (anotherNode1 == NULL)
-	{
-		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
-	}
-	//child
-	anEnemy3D = Create::Enemy3D("high_right_arm", Vector3(-20.0f, 0.0f, -20.0f));
+	anEnemy3D = Create::Enemy3D("TARGET", Vector3(-20.0f, 0.0f, -20.0f));
 	anEnemy3D->Init();
 	anEnemy3D->SetPos(Vector3(-30.0f, 0.0f, -100));
 	anEnemy3D->SetTerrain(groundEntity);
 	anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
-	anEnemy3D->InitLOD("high_right_arm", "med_right_arm", "low_right_arm");
 	Enemy.push_back(anEnemy3D);
 
-	CSceneNode* anotherNode2 = theNode1->AddChild(anEnemy3D);
-	if (anotherNode1 == NULL)
+	CSceneNode*theNode = CSceneGraph::GetInstance()->AddNode(anEnemy3D);//parent
+	if (theNode == NULL)
 	{
 		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
 	}
-	//child
-	anEnemy3D = Create::Enemy3D("high_left_leg", Vector3(-20.0f, 0.0f, -20.0f));
+	anEnemy3D = Create::Enemy3D("TARGET", Vector3(-20.0f, 0.0f, -20.0f));
 	anEnemy3D->Init();
-	anEnemy3D->SetPos(Vector3(-30.0f, 0.0f, -100));
+	anEnemy3D->SetPos(Vector3(-00.0f, 0.0f, -100));
 	anEnemy3D->SetTerrain(groundEntity);
 	anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
-	anEnemy3D->InitLOD("high_left_leg", "med_left_leg", "low_left_leg");
 	Enemy.push_back(anEnemy3D);
 
-	CSceneNode* anotherNode3 = theNode1->AddChild(anEnemy3D);
-	if (anotherNode1 == NULL)
+	CSceneNode* anotherNode = theNode->AddChild(anEnemy3D);//child
+	if (anotherNode == NULL)
 	{
 		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
 	}
-	//child
-	anEnemy3D = Create::Enemy3D("high_right_leg", Vector3(-20.0f, 0.0f, -20.0f));
+
+	anEnemy3D = Create::Enemy3D("TARGET", Vector3(30.0f, 0.0f, -100.0f));
 	anEnemy3D->Init();
-	anEnemy3D->SetPos(Vector3(-30.0f, 0.0f, -100));
+	anEnemy3D->SetPos(Vector3(30.0f, 0.0f, -100));
 	anEnemy3D->SetTerrain(groundEntity);
 	anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
-	anEnemy3D->InitLOD("high_right_leg", "med_right_leg", "low_right_leg");
 	Enemy.push_back(anEnemy3D);
-
-	CSceneNode* anotherNode4 = theNode1->AddChild(anEnemy3D);
-	if (anotherNode1 == NULL)
-	{
-		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
-	}
-
-
-	// Create a CEnemy instance
-	///*anEnemy3D = Create::Enemy3D("TARGET", Vector3(-20.0f, 0.0f, -20.0f));
-	//anEnemy3D->Init();
-	//anEnemy3D->SetPos(Vector3(-30.0f, 0.0f, -100));
-	//anEnemy3D->SetTerrain(groundEntity);
-	//anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
-	//Enemy.push_back(anEnemy3D);
-
-	//CSceneNode*theNode = CSceneGraph::GetInstance()->AddNode(anEnemy3D);
-	//if (theNode == NULL)
-	//{
-	//	cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
-	//}
-	//anEnemy3D = Create::Enemy3D("TARGET", Vector3(-20.0f, 0.0f, -20.0f));
-	//anEnemy3D->Init();
-	//anEnemy3D->SetPos(Vector3(-00.0f, 0.0f, -100));
-	//anEnemy3D->SetTerrain(groundEntity);
-	//anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
-	//Enemy.push_back(anEnemy3D);
-
-	//CSceneNode* anotherNode = theNode->AddChild(anEnemy3D);
-	//if (anotherNode == NULL)
-	//{
-	//	cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
-	//}
-
-	//anEnemy3D = Create::Enemy3D("TARGET", Vector3(30.0f, 0.0f, -100.0f));
-	//anEnemy3D->Init();
-	//anEnemy3D->SetPos(Vector3(30.0f, 0.0f, -100));
-	//anEnemy3D->SetTerrain(groundEntity);
-	//anEnemy3D->SetPAABB(Vector3(anEnemy3D->GetScale().x, anEnemy3D->GetScale().y, anEnemy3D->GetScale().z), anEnemy3D->GetPosition());
-	//Enemy.push_back(anEnemy3D);*/
 
 	GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
 	CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
@@ -459,7 +334,7 @@ void SceneText::Init()
 	//theCube = Create::Entity("Left_Wall", Vector3(0, 0, 0));
 	//theCube->SetPosition(0,0,0)
 	//anEnemy3D = new CEnemy3D();
-	//anEnemy3D->Init();
+	//anEnemy3D->Init(); 
 
 	// Setup the 2D entities
 	float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 3.3f;
@@ -591,6 +466,14 @@ void SceneText::Update(double dt)
 		lights[0]->position.y -= (float)(10.f * dt);
 	if (KeyboardController::GetInstance()->IsKeyDown('P'))
 		lights[0]->position.y += (float)(10.f * dt);
+	if (KeyboardController::GetInstance()->IsKeyReleased('M'))
+	{
+		CSceneNode* theNode = CSceneGraph::GetInstance()->GetNode(1);
+		Vector3 pos = theNode->GetEntity()->GetPosition();
+		theNode->GetEntity()->SetPosition(Vector3(pos.x + 50.0f, pos.y, pos.z + 50.0f));
+	}
+	if (KeyboardController::GetInstance()->IsKeyReleased('N'))
+		CSpatialPartition::GetInstance()->PrintSelf();
 
 	// if the left mouse button was released
 	if (MouseController::GetInstance()->IsButtonReleased(MouseController::LMB))
